@@ -10,8 +10,8 @@ dependencies {
     modImplementation(group = "net.fabricmc", name = "fabric-loader", version = "0.14.21")
     modImplementation(group = "net.fabricmc.fabric-api", name = "fabric-api", version = "0.83.0+1.20")
     modCompileOnly(group = "me.lucko", name = "fabric-permissions-api", version = "0.2-SNAPSHOT")
-    implementation(project(":chunky-common"))
-    shade(project(":chunky-common"))
+    implementation(project(":Chunky-common"))
+    shade(project(":Chunky-common"))
 }
 
 tasks {

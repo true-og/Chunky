@@ -8,8 +8,8 @@ dependencies {
     minecraft(group = "com.mojang", name = "minecraft", version = "1.20")
     mappings(loom.officialMojangMappings())
     forge(group = "net.minecraftforge", name = "forge", version = "1.20-46.0.10")
-    implementation(project(":chunky-common"))
-    shade(project(":chunky-common"))
+    implementation(project(":Chunky-common"))
+    shade(project(":Chunky-common"))
 }
 
 tasks {

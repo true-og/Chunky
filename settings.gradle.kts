@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "chunky"
+rootProject.name = "Chunky"
 
 sequenceOf(
     "nbt",
@@ -18,7 +18,6 @@ sequenceOf(
     "fabric",
     "forge",
     "neoforge",
-    "sponge"
 ).forEach {
     include("${rootProject.name}-$it")
     project(":${rootProject.name}-$it").projectDir = file(it)

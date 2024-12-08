@@ -5,14 +5,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "org.spigotmc", name = "spigot-api", version = "1.20.4-R0.1-SNAPSHOT")
+    compileOnly(group = "org.spigotmc", name = "spigot-api", version = "1.19.4-R0.1-SNAPSHOT")
     compileOnly(group = "com.github.Puremin0rez", name = "WorldBorder", version = "1.19") {
         isTransitive = false
     }
     implementation(group = "org.bstats", name = "bstats-bukkit", version = "3.0.2")
-    implementation(project(":chunky-common"))
-    implementation(project(":chunky-paper"))
-    implementation(project(":chunky-folia"))
+    implementation(project(":Chunky-common"))
+    implementation(project(":Chunky-paper"))
+    implementation(project(":Chunky-folia"))
 }
 
 tasks {
@@ -29,9 +29,9 @@ tasks {
     }
     shadowJar {
         minimize {
-            exclude(project(":chunky-common"))
-            exclude(project(":chunky-paper"))
-            exclude(project(":chunky-folia"))
+            exclude(project(":Chunky-common"))
+            exclude(project(":Chunky-paper"))
+            exclude(project(":Chunky-folia"))
         }
         relocate("org.bstats", "${project.group}.${rootProject.name}.lib.bstats")
     }

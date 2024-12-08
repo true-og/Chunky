@@ -12,8 +12,8 @@ dependencies {
     minecraft(group = "com.mojang", name = "minecraft", version = "1.20.2")
     mappings(loom.officialMojangMappings())
     neoForge(group = "net.neoforged", name = "neoforge", version = "20.2.88")
-    implementation(project(":chunky-common"))
-    shade(project(":chunky-common"))
+    implementation(project(":Chunky-common"))
+    shade(project(":Chunky-common"))
 }
 
 tasks {
