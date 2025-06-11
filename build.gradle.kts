@@ -1,17 +1,20 @@
 import java.io.ByteArrayOutputStream
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.tasks.bundling.Jar
 
 plugins {
+    eclipse
     id("java-library")
     id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.6" apply false
 }
 
 subprojects {
     plugins.apply("java-library")
     plugins.apply("maven-publish")
-    plugins.apply("com.github.johnrengelman.shadow")
+    plugins.apply("com.gradleup.shadow")
 
-    group = "${project.property("group")}"
+    group = project.property("group") as String
     version = "${project.property("version")}.${commitsSinceLastTag()}"
 
     repositories {
@@ -20,9 +23,7 @@ subprojects {
     }
 
     java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
         withSourcesJar()
     }
 
@@ -32,37 +33,38 @@ subprojects {
             options.release = 17
             options.compilerArgs.add("-Xlint:none")
         }
-        jar {
+
+        named<Jar>("jar") {
             archiveClassifier.set("noshade")
         }
-        shadowJar {
+
+        named<ShadowJar>("shadowJar") {
             archiveClassifier.set("")
             archiveFileName.set("${project.property("artifactName")}-${project.version}.jar")
         }
-        build {
-            dependsOn(shadowJar)
+
+        named("build") {
+            dependsOn("shadowJar")
         }
     }
 
     publishing {
         repositories {
-            if (project.hasProperty("mavenUsername") && project.hasProperty("mavenPassword")) {
+            if (hasProperty("mavenUsername") && hasProperty("mavenPassword")) {
                 maven {
                     credentials {
-                        username = "${project.property("mavenUsername")}"
-                        password = "${project.property("mavenPassword")}"
+                        username = project.property("mavenUsername") as String
+                        password = project.property("mavenPassword") as String
                     }
                     url = uri("https://repo.codemc.io/repository/maven-releases/")
                 }
             }
         }
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = "${project.group}"
-                artifactId = project.name
-                version = "${project.version}"
-                from(components["java"])
-            }
+        publications.create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+            from(components["java"])
         }
     }
 }
@@ -73,8 +75,7 @@ fun commitsSinceLastTag(): String {
         commandLine("git", "describe", "--tags")
         standardOutput = tagDescription
     }
-    if (tagDescription.toString().indexOf('-') < 0) {
-        return "0"
-    }
-    return tagDescription.toString().split('-')[1]
+    val desc = tagDescription.toString().trim()
+    return if ('-' !in desc) "0" else desc.split('-')[1]
 }
+
