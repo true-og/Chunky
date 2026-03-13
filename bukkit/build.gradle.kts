@@ -34,6 +34,7 @@ tasks {
     }
     shadowJar {
         archiveClassifier.set("")
+        isEnableRelocation = false
         minimize {
             exclude(project(":Chunky-common"))
             exclude(project(":Chunky-paper"))
