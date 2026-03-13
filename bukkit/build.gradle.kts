@@ -3,13 +3,14 @@ plugins {
 }
 
 repositories {
+    maven("https://repo.purpurmc.org/snapshots")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
 }
 
 dependencies {
-    compileOnly(group = "org.spigotmc", name = "spigot-api", version = "1.19.4-R0.1-SNAPSHOT")
+    compileOnly(group = "org.purpurmc.purpur", name = "purpur-api", version = "1.19.4-R0.1-SNAPSHOT")
     compileOnly(group = "com.github.Puremin0rez", name = "WorldBorder", version = "1.19") {
         isTransitive = false
     }
@@ -32,11 +33,12 @@ tasks {
         }
     }
     shadowJar {
+        archiveClassifier.set("")
         minimize {
             exclude(project(":Chunky-common"))
             exclude(project(":Chunky-paper"))
             exclude(project(":Chunky-folia"))
         }
-        relocate("org.bstats", "${project.group}.${rootProject.name}.lib.bstats")
+        relocate("org.bstats", "${project.group}.${rootProject.name.lowercase()}.lib.bstats")
     }
 }
