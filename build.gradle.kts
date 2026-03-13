@@ -1,12 +1,13 @@
 import java.io.ByteArrayOutputStream
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.bundling.Jar
 
 plugins {
     eclipse
     id("java-library")
     id("maven-publish")
-    id("com.gradleup.shadow") version "8.3.6" apply false
+    id("com.gradleup.shadow") version "8.3.9" apply false
 }
 
 subprojects {
@@ -34,6 +35,11 @@ subprojects {
             options.compilerArgs.add("-Xlint:none")
         }
 
+        withType<AbstractArchiveTask> {
+            isPreserveFileTimestamps = false
+            isReproducibleFileOrder = true
+        }
+
         named<Jar>("jar") {
             archiveClassifier.set("noshade")
         }
@@ -41,6 +47,8 @@ subprojects {
         named<ShadowJar>("shadowJar") {
             archiveClassifier.set("")
             archiveFileName.set("${project.property("artifactName")}-${project.version}.jar")
+            isEnableRelocation = true
+            relocationPrefix = "${project.group}.${rootProject.name.lowercase()}.shadow"
         }
 
         named("build") {
@@ -69,6 +77,20 @@ subprojects {
     }
 }
 
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+
+val pluginArtifact by tasks.registering(Sync::class) {
+    dependsOn(":Chunky-bukkit:shadowJar")
+    from(project(":Chunky-bukkit").tasks.named("shadowJar"))
+    into(layout.buildDirectory.dir("libs"))
+}
+
+tasks.named("build") {
+    dependsOn(pluginArtifact)
+}
+
 fun commitsSinceLastTag(): String {
     val tagDescription = ByteArrayOutputStream()
     exec {
@@ -78,4 +100,3 @@ fun commitsSinceLastTag(): String {
     val desc = tagDescription.toString().trim()
     return if ('-' !in desc) "0" else desc.split('-')[1]
 }
-
